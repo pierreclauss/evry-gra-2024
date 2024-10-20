@@ -14,4 +14,3 @@ Before the first workshop, each student has to follow these 3 steps:
   1. download R base from [R project](https://rstudio.com/products/rstudio/download/) (step 1 of the web link),
 2. download RStudio from [RStudio](https://rstudio.com/products/rstudio/download/) (step 2 of the web link),
 3. download the packages __tidyverse__, __tidyquant__, __DataExplorer__, __corrplot__ with the function `install.packages(c("tidyverse", "tidyquant", "DataExplorer", "corrplot"))`.
-

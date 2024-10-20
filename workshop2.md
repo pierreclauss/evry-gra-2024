@@ -1,5 +1,5 @@
 Workshop 2 - Multi-assets tactical allocation, Tangency Portfolio and
-Black-Litterman approach with ESG views
+Black-Litterman approach with ESG ratings
 ================
 Pierre Clauss
 October 2024
@@ -16,9 +16,9 @@ succeed the workshop.*
 
 I import the data with the package **tidyquant**, which allows to import
 financial data directly from Yahoo Finance. I import 6 equities from CAC
-40 and with a good balance between green and brown peculiarities:
-Bouygues, Engie, Schneider Electric, TotalEnergies, Capgemini and LVMH.
-I import also a green bond ETF proposed by BlackRock.
+40 and with a good balance between brown and green features: Bouygues,
+Engie, TotalEnergies on one side and Schneider Electric, Capgemini, LVMH
+on the other side. I import also a green bond ETF proposed by BlackRock.
 
 ``` r
 library(tidyverse)
@@ -27,8 +27,8 @@ library(tidyquant)
 symbols <-
   c("EN.PA",
     "ENGI.PA",
-    "SU.PA",
     "TTE.PA",
+    "SU.PA",
     "CAP.PA",
     "MC.PA",
     "BGRN")
@@ -44,8 +44,10 @@ The start date is November 2018.
 
 ### 1.2 Wrangling
 
-I need for the workshop only returns to do calculation on: so I shrink
-the data of workshop 2 to returns.
+For the workshop, I need only returns to do calculation on: so I
+determine monthly financial returns on stock prices. Returns are monthly
+returns because they are nearer to gaussian data than weekly and daily
+data.
 
 ``` r
 monthly_returns <- stock_prices %>%
@@ -67,8 +69,7 @@ table_returns <- monthly_returns %>%
 Then, the wrangling is quite simple here: data are tidy - each column is
 a variable (an equity) and each line is an observation (a month) - and
 data have been transformed in financial returns, which are used to model
-a portfolio. Returns are monthly returns because they are nearer to
-gaussian data than weekly and daily data.
+a portfolio.
 
 We can see below, thanks to the package **DataExplorer**, a summary of
 the observed data.
@@ -102,30 +103,6 @@ monthly_returns %>%
 
 ![](workshop2_files/figure-gfm/dataviz_1-1.png)<!-- -->
 
-``` r
-monthly_prices <- stock_prices %>%
-  group_by(symbol) %>%
-  tq_transmute(select = adjusted,
-               mutate_fun = to.monthly,
-               indexAt = "lastof")
-
-monthly_prices %>%
-  ggplot(aes(x = date, y = adjusted, color = symbol)) +
-  geom_line(size = 1) +
-  labs(
-    title = "Monthly Stock Prices",
-    x = "Date",
-    y = "Adjusted Prices",
-    color = ""
-  ) +
-  facet_wrap(~ symbol, ncol = 2, scales = "free_y") +
-  scale_y_continuous(labels = scales::dollar_format(suffix = "€", prefix = "")) +
-  theme_tq() +
-  scale_color_tq()
-```
-
-![](workshop2_files/figure-gfm/dataviz_1-2.png)<!-- -->
-
 Some statistics to sum up the distribution are shown below: I cannot
 observe for all returns symmetric data with a median and a mean which
 could be quite equal.
@@ -134,18 +111,18 @@ could be quite equal.
 summary(table_returns)
 ```
 
-    ##      EN.PA              ENGI.PA             SU.PA              TTE.PA         
-    ##  Min.   :-0.246900   Min.   :-0.37379   Min.   :-0.13394   Min.   :-0.130592  
-    ##  1st Qu.:-0.027360   1st Qu.:-0.02511   1st Qu.:-0.01467   1st Qu.:-0.041797  
-    ##  Median : 0.008089   Median : 0.01592   Median : 0.02562   Median : 0.003991  
-    ##  Mean   : 0.005297   Mean   : 0.01094   Mean   : 0.02385   Mean   : 0.010811  
-    ##  3rd Qu.: 0.046800   3rd Qu.: 0.05713   3rd Qu.: 0.06354   3rd Qu.: 0.050041  
-    ##  Max.   : 0.185790   Max.   : 0.19114   Max.   : 0.19167   Max.   : 0.387490  
+    ##      EN.PA              ENGI.PA             TTE.PA              SU.PA         
+    ##  Min.   :-0.246900   Min.   :-0.37379   Min.   :-0.130592   Min.   :-0.13394  
+    ##  1st Qu.:-0.027360   1st Qu.:-0.02511   1st Qu.:-0.041797   1st Qu.:-0.01467  
+    ##  Median : 0.008089   Median : 0.01592   Median : 0.003991   Median : 0.02562  
+    ##  Mean   : 0.005283   Mean   : 0.01097   Mean   : 0.010784   Mean   : 0.02384  
+    ##  3rd Qu.: 0.046800   3rd Qu.: 0.05713   3rd Qu.: 0.050041   3rd Qu.: 0.06354  
+    ##  Max.   : 0.185790   Max.   : 0.19114   Max.   : 0.387490   Max.   : 0.19167  
     ##      CAP.PA             MC.PA               BGRN          
-    ##  Min.   :-0.22395   Min.   :-0.09325   Min.   :-0.040008  
-    ##  1st Qu.:-0.04956   1st Qu.:-0.03553   1st Qu.:-0.007654  
-    ##  Median : 0.01391   Median : 0.01680   Median : 0.002721  
-    ##  Mean   : 0.01270   Mean   : 0.01562   Mean   : 0.001657  
+    ##  Min.   :-0.22395   Min.   :-0.09484   Min.   :-0.040008  
+    ##  1st Qu.:-0.04930   1st Qu.:-0.03553   1st Qu.:-0.007654  
+    ##  Median : 0.01391   Median : 0.01680   Median : 0.002722  
+    ##  Mean   : 0.01271   Mean   : 0.01560   Mean   : 0.001660  
     ##  3rd Qu.: 0.07458   3rd Qu.: 0.06135   3rd Qu.: 0.013709  
     ##  Max.   : 0.17309   Max.   : 0.20035   Max.   : 0.039630
 
@@ -250,7 +227,7 @@ monetary assets (null weight for this last asset in the TP).
 Before modelling, I separate the initial sample between a learning
 sample and a backtest sample to evaluate the performance of our
 modelling. I choose May 2023 as a separation date to backtest the
-strategy on the last 2 years of the sample.
+strategy on the last 1.5 year of the sample.
 
 ``` r
 end_date <- nrow(table_returns)
@@ -280,22 +257,23 @@ unbiased estimators of its weights. I assume that
 ![](workshop2_files/figure-gfm/TP-1.png)<!-- -->
 
 The realised return observed on the backtest sample of the portfolio
-constructed on the learning sample is equal to 11.65%.
+constructed on the learning sample is equal to 11.72%.
 
 I am going to improve this result thanks to a more robust statistical
-approach integrating economic predictions in the allocation.
+approach integrating ESG ratings in the allocation.
 
 #### 2.2.2 Tactical allocation for the Tangency Portfolio with Black-Litterman approach
 
 Tactical allocation is a process that deviates the strategic allocation
-thanks to new information: for instance, if I think that one index will
+thanks to new information: for instance, if I think that one equity will
 perform better in the near future, then I will increase its weight
 relative to the others.
 
 Black-Litterman approach is one of a quantitative methodology to
-integrate these predictions/views in a relevant way. This approach adds
-to economic predictions statistical uncertainty: the econometric
-approach is no more a plug-in approach but a decision-bayesian approach.
+integrate these predictions, views or ratings in a relevant way. This
+approach adds to predictions statistical uncertainty: the econometric
+approach to estimate portfolios is no more a plug-in approach but a
+decision-bayesian approach.
 
 The Black-Litterman returns are the following mixed estimates:
 
@@ -311,27 +289,32 @@ matrix of uncertainty associated to the economic views; we assume that
 diagonal matrix with diagonal elements equal to variances of assets
 returns.
 
-I use [Sustainalytics’ ESG risk
-assessment](https://www.sustainalytics.com/esg-data) which measures the
-risk faced by a company’s value due to environmental, social, and
-governance issues. The ESG rating measures risk on an absolute scale
-from 0 to 100. The lowest rating indicates that ESG risk is best
-managed. It is available since 2014 and published on Yahoo Finance since
-2018.
+Economic views here will be based on ESG ratings. I assume that the
+future performance of stocks could be influenced by their ESG ratings: a
+good ESG rating will lead to good performance, and a bad one will lead
+to poor performance.
 
-And, I transform the ratings in returns to obtain
+For this, I use [Sustainalytics’ ESG risk
+assessment](https://www.sustainalytics.com/esg-data) to obtain ESG
+ratings. These ratings measure the risk to which a company’s value is
+exposed due to environmental, social and governance issues. They assess
+the risk on an absolute scale from 0 to 100. The lowest score indicates
+that ESG risk is the best managed. They are available since 2014 and
+published on Yahoo Finance since 2018.
+
+Finally, I transform these ratings in returns to obtain
 ![Q](https://latex.codecogs.com/png.latex?Q "Q").
 
 ``` r
 # Example of parameters for BL approach
 note <- numeric(n)
-note[1] <- -2 # Bouygues negative rating 35
-note[2] <- -1 # Engie negative rating 30
-note[3] <- 1 # Schneider positive rating 11
-note[4] <- -1 # TotalEnergies negative rating 28
-note[5] <- 1 # Capgemini positive rating 11
-note[6] <- 1 # LVMH positive rating 12
-note[7] <- 1 # Green Bond positive rating
+note[1] <- -2 # Bouygues: negative rating 35
+note[2] <- -1 # Engie: negative rating 30
+note[3] <- -1 # TotalEnergies: negative rating 28
+note[4] <- 1 # Schneider Electric: positive rating 11
+note[5] <- 1 # Capgemini: positive rating 11
+note[6] <- 1 # LVMH: positive rating 12
+note[7] <- 1 # Green Bond: positive rating
 vol <- sqrt(diag(Sigma))
 theta <- 0.2
 Q <- mu + vol * note * theta
@@ -341,23 +324,23 @@ tau <- 0.5
 ![](workshop2_files/figure-gfm/BL-1.png)<!-- -->
 
 The realised return observed on the backtest sample of the BL portfolio
-constructed on the learning sample is equal to 12.36%.
+constructed on the learning sample is equal to 12.44%.
 
 I can compare it to the portfolio constructed directly with views and
 without uncertainty on the predictions. The realised return observed on
 the backtest sample of this portfolio constructed on the learning sample
-is equal to 11.13%. BL approach mitigates the return of this portfolio
-by integrating uncertainty and then less confidence in the views.
+is equal to 11.21%. BL approach integrates uncertainty and then less
+confidence in the views.
 
 ## To conclude the second workshop
 
 This workshop is the second of my course on Asset Management dedicated
 to multi-assets allocation and Tangency Portfolio. I present some
 improvements of the classical plug-in estimators thanks to the
-Black-Litterman approach and an integration of ESG views.
+Black-Litterman approach and an integration of ESG ratings.
 
-To go beyond, I advise to read the academic paper of Pastor, Stambaugh
-and Taylor [“Dissecting green
-returns”](https://www.nber.org/system/files/working_papers/w28940/w28940.pdf)
-where they show that green stocks do not insure outperformance relative
-to brown ones.
+To go further, I recommend reading the academic paper by Pastor,
+Stambaugh, and Taylor [“Dissecting green
+returns”](https://www.nber.org/system/files/working_papers/w28940/w28940.pdf),
+where they show that green stocks do not guarantee outperformance
+compared to brown stocks.

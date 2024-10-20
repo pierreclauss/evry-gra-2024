@@ -220,18 +220,18 @@ summary(table_returns_first)
 
     ##      AI.PA              CS.PA              BNP.PA              EN.PA          
     ##  Min.   :-0.13454   Min.   :-0.39935   Min.   :-0.371703   Min.   :-0.246900  
-    ##  1st Qu.:-0.01770   1st Qu.:-0.03401   1st Qu.:-0.051054   1st Qu.:-0.035574  
-    ##  Median : 0.01178   Median : 0.01373   Median : 0.011469   Median : 0.005015  
-    ##  Mean   : 0.01013   Mean   : 0.01102   Mean   : 0.008206   Mean   : 0.005135  
-    ##  3rd Qu.: 0.03724   3rd Qu.: 0.05961   3rd Qu.: 0.066981   3rd Qu.: 0.051362  
-    ##  Max.   : 0.13924   Max.   : 0.42841   Max.   : 0.439122   Max.   : 0.268996  
+    ##  1st Qu.:-0.01749   1st Qu.:-0.03401   1st Qu.:-0.051054   1st Qu.:-0.035573  
+    ##  Median : 0.01178   Median : 0.01438   Median : 0.012538   Median : 0.005015  
+    ##  Mean   : 0.01029   Mean   : 0.01124   Mean   : 0.008602   Mean   : 0.005276  
+    ##  3rd Qu.: 0.03724   3rd Qu.: 0.05961   3rd Qu.: 0.067134   3rd Qu.: 0.051362  
+    ##  Max.   : 0.13924   Max.   : 0.42841   Max.   : 0.439123   Max.   : 0.268997  
     ##      CA.PA                BN.PA          
     ##  Min.   :-0.2430708   Min.   :-0.207393  
     ##  1st Qu.:-0.0448149   1st Qu.:-0.024753  
-    ##  Median : 0.0036579   Median : 0.005868  
-    ##  Mean   :-0.0002651   Mean   : 0.005074  
+    ##  Median : 0.0036578   Median : 0.005868  
+    ##  Mean   :-0.0002533   Mean   : 0.005128  
     ##  3rd Qu.: 0.0431890   3rd Qu.: 0.038877  
-    ##  Max.   : 0.1592890   Max.   : 0.152109
+    ##  Max.   : 0.1592891   Max.   : 0.152109
 
 I can go deeper thanks to distribution graphics: the non-parametric
 (kernel method) estimation of the distribution and QQ-plots.
@@ -364,10 +364,10 @@ obtain unbiased estimators of GMV weights.
 ![](workshop1_files/figure-gfm/gmv_empirical-1.png)<!-- -->
 
 The anticipated volatility of the portfolio constructed on the learning
-sample is equal to 11%.
+sample is equal to 11.41%.
 
 The realised volatility of the portfolio observed on the backtest sample
-is equal to 14%.
+is equal to 14.05%.
 
 I am going to improve these results thanks to a more robust statistical
 approach.
@@ -404,10 +404,10 @@ the diagonal residual covariance matrix determined for each asset
 ![](workshop1_files/figure-gfm/gmv_1factor-1.png)<!-- -->
 
 The anticipated volatility of the portfolio constructed on the learning
-sample is equal to 9%.
+sample is equal to 8.76%.
 
 The realised volatility of the portfolio observed on the backtest sample
-is equal to 12%.
+is equal to 12.44%.
 
 #### 2.2.3 GMV portfolio with factorial modelling (3 factors)
 
@@ -430,10 +430,10 @@ the diagonal residual covariance matrix determined for each asset
 ![](workshop1_files/figure-gfm/gmv_3factors-1.png)<!-- -->
 
 The anticipated volatility of the portfolio constructed on the learning
-sample is equal to 10%.
+sample is equal to 9.72%.
 
 The realised volatility of the portfolio observed on the backtest sample
-is equal to 14%.
+is equal to 14.02%.
 
 ## To conclude the first workshop
 
