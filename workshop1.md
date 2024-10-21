@@ -220,18 +220,18 @@ summary(table_returns_first)
 
     ##      AI.PA              CS.PA              BNP.PA              EN.PA          
     ##  Min.   :-0.13454   Min.   :-0.39935   Min.   :-0.371703   Min.   :-0.246900  
-    ##  1st Qu.:-0.01749   1st Qu.:-0.03400   1st Qu.:-0.051054   1st Qu.:-0.035574  
+    ##  1st Qu.:-0.01749   1st Qu.:-0.03401   1st Qu.:-0.051054   1st Qu.:-0.035574  
     ##  Median : 0.01178   Median : 0.01438   Median : 0.012538   Median : 0.005015  
-    ##  Mean   : 0.01026   Mean   : 0.01120   Mean   : 0.008581   Mean   : 0.005243  
+    ##  Mean   : 0.01026   Mean   : 0.01120   Mean   : 0.008579   Mean   : 0.005244  
     ##  3rd Qu.: 0.03724   3rd Qu.: 0.05961   3rd Qu.: 0.067134   3rd Qu.: 0.051362  
-    ##  Max.   : 0.13924   Max.   : 0.42841   Max.   : 0.439123   Max.   : 0.268996  
+    ##  Max.   : 0.13924   Max.   : 0.42841   Max.   : 0.439123   Max.   : 0.268997  
     ##      CA.PA                BN.PA          
-    ##  Min.   :-0.2430708   Min.   :-0.207393  
-    ##  1st Qu.:-0.0448149   1st Qu.:-0.024753  
+    ##  Min.   :-0.2430706   Min.   :-0.207393  
+    ##  1st Qu.:-0.0448148   1st Qu.:-0.024753  
     ##  Median : 0.0036579   Median : 0.005868  
-    ##  Mean   :-0.0002607   Mean   : 0.005109  
+    ##  Mean   :-0.0002636   Mean   : 0.005109  
     ##  3rd Qu.: 0.0431890   3rd Qu.: 0.038877  
-    ##  Max.   : 0.1592891   Max.   : 0.152109
+    ##  Max.   : 0.1592890   Max.   : 0.152109
 
 I can go deeper thanks to distribution graphics: the non-parametric
 (kernel method) estimation of the distribution and QQ-plots.
@@ -418,10 +418,24 @@ the diagonal residual covariance matrix determined for each asset
 
 ![\text{Var}\left(\varepsilon_i\right) = \text{Var}\left(r_i\right) - \phi\_{1i}^2\lambda_1](https://latex.codecogs.com/png.latex?%5Ctext%7BVar%7D%5Cleft%28%5Cvarepsilon_i%5Cright%29%20%3D%20%5Ctext%7BVar%7D%5Cleft%28r_i%5Cright%29%20-%20%5Cphi_%7B1i%7D%5E2%5Clambda_1 "\text{Var}\left(\varepsilon_i\right) = \text{Var}\left(r_i\right) - \phi_{1i}^2\lambda_1")
 
-Then, I can plug-in this estimate of covariance matrix in the formula of
-the GMV portfolio to obtain a more robust estimator of GMV weights.
+Then, I can plug-in this estimator of covariance matrix in the formula
+of the GMV portfolio to obtain a more robust estimator of GMV weights.
 
-![](workshop1_files/figure-gfm/gmv_1factor-1.png)<!-- -->
+``` r
+valp <- eigen(Sigma)$values
+vecp <- eigen(Sigma)$vectors
+vp1 <- vecp[, 1]
+lambda1 <- valp[1]
+varepsilon1 <- diag(Sigma) - vp1 ^ 2 * lambda1
+Sigma_epsilon1 <- diag(varepsilon1, n, n)
+Sigma1 <- (lambda1 * vp1 %*% t(vp1) + Sigma_epsilon1)
+C1 <- t(e) %*% solve(Sigma1) %*% e
+sigmag1 <- sqrt(1 / C1)
+omega1 <- 1 / as.numeric(C1) * solve(Sigma1) %*% e
+barplot(as.numeric(omega1), col = 'black')
+```
+
+![](workshop1_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
 
 The anticipated volatility of the portfolio constructed on the learning
 sample is equal to 8.76%.
@@ -447,7 +461,10 @@ the diagonal residual covariance matrix determined for each asset
 
 ![\text{Var}\left(\varepsilon_i\right) = \text{Var}\left(r_i\right) - \phi\_{1i}^2\lambda_1 - \phi\_{2i}^2\lambda_2 - \phi\_{3i}^2\lambda_3](https://latex.codecogs.com/png.latex?%5Ctext%7BVar%7D%5Cleft%28%5Cvarepsilon_i%5Cright%29%20%3D%20%5Ctext%7BVar%7D%5Cleft%28r_i%5Cright%29%20-%20%5Cphi_%7B1i%7D%5E2%5Clambda_1%20-%20%5Cphi_%7B2i%7D%5E2%5Clambda_2%20-%20%5Cphi_%7B3i%7D%5E2%5Clambda_3 "\text{Var}\left(\varepsilon_i\right) = \text{Var}\left(r_i\right) - \phi_{1i}^2\lambda_1 - \phi_{2i}^2\lambda_2 - \phi_{3i}^2\lambda_3")
 
-![](workshop1_files/figure-gfm/gmv_3factors-1.png)<!-- -->
+Then, I can plug-in this estimator of covariance matrix in the formula
+of the GMV portfolio to obtain a more robust estimator of GMV weights.
+
+![](workshop1_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 The anticipated volatility of the portfolio constructed on the learning
 sample is equal to 9.72%.
