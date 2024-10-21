@@ -113,17 +113,17 @@ summary(table_returns)
 
     ##      EN.PA              ENGI.PA             TTE.PA              SU.PA         
     ##  Min.   :-0.246900   Min.   :-0.37379   Min.   :-0.130592   Min.   :-0.13394  
-    ##  1st Qu.:-0.027360   1st Qu.:-0.02511   1st Qu.:-0.041797   1st Qu.:-0.01467  
-    ##  Median : 0.008089   Median : 0.01592   Median : 0.003991   Median : 0.02562  
-    ##  Mean   : 0.005283   Mean   : 0.01097   Mean   : 0.010784   Mean   : 0.02384  
-    ##  3rd Qu.: 0.046800   3rd Qu.: 0.05713   3rd Qu.: 0.050041   3rd Qu.: 0.06354  
-    ##  Max.   : 0.185790   Max.   : 0.19114   Max.   : 0.387490   Max.   : 0.19167  
+    ##  1st Qu.:-0.028505   1st Qu.:-0.02558   1st Qu.:-0.043628   1st Qu.:-0.01508  
+    ##  Median : 0.010677   Median : 0.01403   Median : 0.003434   Median : 0.02548  
+    ##  Mean   : 0.005302   Mean   : 0.01073   Mean   : 0.010655   Mean   : 0.02359  
+    ##  3rd Qu.: 0.048995   3rd Qu.: 0.05902   3rd Qu.: 0.050446   3rd Qu.: 0.06425  
+    ##  Max.   : 0.185790   Max.   : 0.19114   Max.   : 0.387491   Max.   : 0.19167  
     ##      CAP.PA             MC.PA               BGRN          
-    ##  Min.   :-0.22395   Min.   :-0.09484   Min.   :-0.040008  
-    ##  1st Qu.:-0.04930   1st Qu.:-0.03553   1st Qu.:-0.007654  
-    ##  Median : 0.01391   Median : 0.01680   Median : 0.002722  
-    ##  Mean   : 0.01271   Mean   : 0.01560   Mean   : 0.001660  
-    ##  3rd Qu.: 0.07458   3rd Qu.: 0.06135   3rd Qu.: 0.013709  
+    ##  Min.   :-0.22395   Min.   :-0.08737   Min.   :-0.040008  
+    ##  1st Qu.:-0.04928   1st Qu.:-0.03490   1st Qu.:-0.006907  
+    ##  Median : 0.01417   Median : 0.01753   Median : 0.002880  
+    ##  Mean   : 0.01358   Mean   : 0.01717   Mean   : 0.001810  
+    ##  3rd Qu.: 0.07479   3rd Qu.: 0.06187   3rd Qu.: 0.014024  
     ##  Max.   : 0.17309   Max.   : 0.20035   Max.   : 0.039630
 
 I can go deeper thanks to distribution graphics: the non-parametric
@@ -235,7 +235,7 @@ table_returns_learning <- table_returns %>% slice(1:55)
 table_returns_backtest <- table_returns %>% slice(56:end_date)
 ```
 
-There are 55 learning observations and 16 backtest observations. My
+There are 55 learning observations and 15 backtest observations. My
 objective is to observe if I can obtain better performance with a
 tactical allocation on the backtest sample. Before all, I present the
 construction of the strategic allocation.
@@ -257,7 +257,7 @@ unbiased estimators of its weights. I assume that
 ![](workshop2_files/figure-gfm/TP-1.png)<!-- -->
 
 The realised return observed on the backtest sample of the portfolio
-constructed on the learning sample is equal to 11.72%.
+constructed on the learning sample is equal to 11.30%.
 
 I am going to improve this result thanks to a more robust statistical
 approach integrating ESG ratings in the allocation.
@@ -324,12 +324,12 @@ tau <- 0.5
 ![](workshop2_files/figure-gfm/BL-1.png)<!-- -->
 
 The realised return observed on the backtest sample of the BL portfolio
-constructed on the learning sample is equal to 12.44%.
+constructed on the learning sample is equal to 11.54%.
 
 I can compare it to the portfolio constructed directly with views and
 without uncertainty on the predictions. The realised return observed on
 the backtest sample of this portfolio constructed on the learning sample
-is equal to 11.21%. BL approach integrates uncertainty and then less
+is equal to 9.49%. BL approach integrates uncertainty and then less
 confidence in the views.
 
 ## To conclude the second workshop
