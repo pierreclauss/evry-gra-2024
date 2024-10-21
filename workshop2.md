@@ -117,13 +117,13 @@ summary(table_returns)
     ##  Median : 0.010677   Median : 0.01403   Median : 0.003434   Median : 0.02548  
     ##  Mean   : 0.005302   Mean   : 0.01073   Mean   : 0.010655   Mean   : 0.02359  
     ##  3rd Qu.: 0.048995   3rd Qu.: 0.05902   3rd Qu.: 0.050446   3rd Qu.: 0.06425  
-    ##  Max.   : 0.185790   Max.   : 0.19114   Max.   : 0.387491   Max.   : 0.19167  
+    ##  Max.   : 0.185791   Max.   : 0.19114   Max.   : 0.387491   Max.   : 0.19167  
     ##      CAP.PA             MC.PA               BGRN          
     ##  Min.   :-0.22395   Min.   :-0.08737   Min.   :-0.040008  
     ##  1st Qu.:-0.04928   1st Qu.:-0.03490   1st Qu.:-0.006907  
     ##  Median : 0.01417   Median : 0.01753   Median : 0.002880  
     ##  Mean   : 0.01358   Mean   : 0.01717   Mean   : 0.001810  
-    ##  3rd Qu.: 0.07479   3rd Qu.: 0.06187   3rd Qu.: 0.014024  
+    ##  3rd Qu.: 0.07479   3rd Qu.: 0.06187   3rd Qu.: 0.014025  
     ##  Max.   : 0.17309   Max.   : 0.20035   Max.   : 0.039630
 
 I can go deeper thanks to distribution graphics: the non-parametric
@@ -254,13 +254,45 @@ Then, I can plug-in these estimates on the formula of the TP to obtain
 unbiased estimators of its weights. I assume that
 ![r_f=0\\](https://latex.codecogs.com/png.latex?r_f%3D0%5C%25 "r_f=0\%").
 
+``` r
+n <- ncol(table_returns_learning)
+T <- nrow(table_returns_learning)
+e <- rep(1, n)
+perio <- 12
+rf <- 0
+
+mu <- colMeans(table_returns_learning) * perio - rf
+Sigma <- cov(table_returns_learning) * (T - 1) / (T - n - 2) * perio
+A <- t(e) %*% solve(Sigma) %*% mu
+omega <- 1 / as.numeric(A) * solve(Sigma) %*% mu
+
+barnames <-
+  c('Bouygues',
+    'Engie',
+    'Total',
+    'Schneider',
+    'Cap',
+    'LVMH',
+    'Green B')
+barplot(
+  as.numeric(omega),
+  col = 'black',
+  names.arg = barnames,
+  ylim = c(-1, 2)
+)
+```
+
 ![](workshop2_files/figure-gfm/TP-1.png)<!-- -->
 
 The realised return observed on the backtest sample of the portfolio
 constructed on the learning sample is equal to 11.30%.
 
-I am going to improve this result thanks to a more robust statistical
-approach integrating ESG ratings in the allocation.
+**Code for the realised return (with Alt Gr 7 at the beginning and at
+the end): r percent(mean(as.matrix(table_returns_backtest) %*% omega) *
+perio, accuracy = 0.01)**
+
+I am going to try to improve this result thanks to a more robust
+statistical approach integrating ESG ratings in the allocation.
 
 #### 2.2.2 Tactical allocation for the Tangency Portfolio with Black-Litterman approach
 
