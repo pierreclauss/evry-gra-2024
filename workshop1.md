@@ -222,16 +222,16 @@ summary(table_returns_first)
     ##  Min.   :-0.13454   Min.   :-0.39935   Min.   :-0.371703   Min.   :-0.246900  
     ##  1st Qu.:-0.01749   1st Qu.:-0.03401   1st Qu.:-0.051054   1st Qu.:-0.035574  
     ##  Median : 0.01178   Median : 0.01438   Median : 0.012538   Median : 0.005015  
-    ##  Mean   : 0.01026   Mean   : 0.01120   Mean   : 0.008578   Mean   : 0.005241  
+    ##  Mean   : 0.01026   Mean   : 0.01120   Mean   : 0.008583   Mean   : 0.005243  
     ##  3rd Qu.: 0.03724   3rd Qu.: 0.05961   3rd Qu.: 0.067134   3rd Qu.: 0.051362  
     ##  Max.   : 0.13924   Max.   : 0.42841   Max.   : 0.439122   Max.   : 0.268997  
     ##      CA.PA                BN.PA          
     ##  Min.   :-0.2430708   Min.   :-0.207393  
-    ##  1st Qu.:-0.0448149   1st Qu.:-0.024753  
+    ##  1st Qu.:-0.0448148   1st Qu.:-0.024752  
     ##  Median : 0.0036579   Median : 0.005868  
-    ##  Mean   :-0.0002651   Mean   : 0.005107  
+    ##  Mean   :-0.0002636   Mean   : 0.005107  
     ##  3rd Qu.: 0.0431890   3rd Qu.: 0.038877  
-    ##  Max.   : 0.1592890   Max.   : 0.152109
+    ##  Max.   : 0.1592891   Max.   : 0.152109
 
 I can go deeper thanks to distribution graphics: the non-parametric
 (kernel method) estimation of the distribution and QQ-plots.
