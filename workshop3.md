@@ -380,3 +380,4 @@ hist(cppi[n + 1, ], breaks = 100, main = "CPPI prices at maturity", xlab = "CPPI
 This workshop is the third of my course on Asset Management dedicated to
 structured portfolios with an objective of capital insurance. I present
 some tools to insure portfolios and study their risks and performances.
+Impacts could change according to the sensitivity of their parameters.
